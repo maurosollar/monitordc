@@ -1,23 +1,26 @@
-Instala ferramenta do ESP32
+Adquirido uma placa WT32-ETH01 baseada no ESP32 + Ethernet LAN8720 integrados como objetivo de criar um monitoramento de ambiente retornando umidade e temperatura em JSON.
+
+
+Instalado ferramenta do ESP32
 pip install esptool
 
 Com um adaptador RS-232 3.3v
-No caso que usei um WT32-ETH01 ele é 3.3v, mas ele tem um pino que pode entrar com 5v que passa por um regulador de 3.3v
+WT32-ETH01 é 3.3v, mas tem entrada de 5v que passa por um regulador de 3.3v
 
 Apaga todo conteúdo da flash
 esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
 Grava o firmware no ESP32
-esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-20230426-v1.20.0.bin
+esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-20230426-v1.20.0.bin (baixado do www.micropython.com)
 
 Instalado o aplicativo Thonny
 Vá em Tools
         Options
           Interpreter
             Selecione MicroPython (ESP32)
-            Selecione a Serial RS-232
+            Selecione o dispositivo serial
 
 Obs.: 
-- Para o programa em executar assim que ligar o ESP32 é só ter nome "main.py"
+- No MicroPython a aplicação com nome main.py entra em execução assim que ligar o módulo.
 - As bibliotecas são gravadas no ESP32 também, exemplo de uma biblioteca do BME280 / MicroPyServer / ssd1306
 
 https://github.com/SebastianRoll/mpy_bme280_esp8266
