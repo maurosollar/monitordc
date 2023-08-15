@@ -15,7 +15,7 @@ Sequência:
 TXD - RX da serial do micro
 RXD - TX da serial do micro
 IO0 - ---\
-          |--> Fechar
+          |--> Fechar para entrar em modo de gravação
 GND - ---/
 
 Alimentação:
