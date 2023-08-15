@@ -20,7 +20,7 @@ if not lan.active():
 while not lan.isconnected():
     pass
 
-sleep(2)
+sleep(3)
 endip = lan.ifconfig()[0]
 display.fill(0)
 display.text('End. IP:', 0, 0, 1)
