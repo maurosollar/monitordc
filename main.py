@@ -22,9 +22,17 @@ while not lan.isconnected():
 
 sleep(3)
 endip = lan.ifconfig()[0]
+dados = bme.values
+temperatura = float(dados[0].replace('C', ''))
+umidade = float(dados[2].replace('%', ''))
+json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
+temp = "Temp.: " + str(temperatura)
+umid = "Umidade: " + str(umidade)
 display.fill(0)
 display.text('End. IP:', 0, 0, 1)
-display.text(endip, 0, 12, 1)
+display.text(endip, 0, 16, 1)
+display.text(temp, 0, 32, 1)
+display.text(umid, 0, 48, 1) 
 display.show()
 
 
@@ -34,6 +42,13 @@ def temp_umidade(request):
     temperatura = float(dados[0].replace('C', ''))
     umidade = float(dados[2].replace('%', ''))
     json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
+    temp = "Temp.: " + str(temperatura)
+    umid = "Umidade: " + str(umidade)
+    display.fill(0)
+    display.text('End. IP:', 0, 0, 1)
+    display.text(endip, 0, 16, 1)
+    display.text(temp, 0, 32, 1)
+    display.text(umid, 0, 48, 1)    
     server.send("HTTP/1.0 200 OK\n")
     server.send("Content-Type: application/json\n")
     server.send("Connection: close\n\n")      
@@ -46,8 +61,8 @@ def mensagem_display(request):
     mensagem = params["mensagem"]
     display.fill(0)
     display.text('End. IP:', 0, 0, 1)
-    display.text(endip, 0, 12, 1)
-    display.text(mensagem, 0, 30, 1)
+    display.text(endip, 0, 16, 1)
+    display.text(mensagem, 0, 34, 1)
     display.show()
     server.send("Mensagem enviada para o display: " + mensagem)
 
@@ -59,3 +74,4 @@ server.add_route("/mostra", mensagem_display)
 
 ''' start server '''
 server.start()
+
