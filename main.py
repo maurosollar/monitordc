@@ -46,7 +46,7 @@ def mensagem_display(request):
     mensagem = params["mensagem"]
     display.fill(0)
     display.text('End. IP:', 0, 0, 1)
-    display.text(endip, 0, 10, 1)
+    display.text(endip, 0, 12, 1)
     display.text(mensagem, 0, 30, 1)
     display.show()
     server.send("Mensagem enviada para o display: " + mensagem)
