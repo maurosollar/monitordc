@@ -23,7 +23,7 @@ while not lan.isconnected():
 sleep(3)
 endip = lan.ifconfig()[0]
 sensor.measure()
-dados = [d.temperatura(), d.humidity()]
+dados = [sensor.temperatura(), sensor.humidity()]
 temperatura = float(dados[0].replace('C', ''))
 umidade = float(dados[2].replace('%', ''))
 json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
@@ -40,7 +40,7 @@ display.show()
 def temp_umidade(request):
     ''' rota principal '''
     sensor.measure()
-    dados = [d.temperatura(), d.humidity()]
+    dados = [sensor.temperatura(), sensor.humidity()]
     temperatura = float(dados[0].replace('C', ''))
     umidade = float(dados[2].replace('%', ''))
     json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
