@@ -1,11 +1,11 @@
-import machine, esp32, network, json, bme280, ssd1306, utils
+import machine, esp32, network, json, ssd1306, utils, dht
 from machine import Pin, SoftI2C
 from micropyserver import MicroPyServer
 from time import sleep
 
 i2c = SoftI2C(scl=Pin(32), sda=Pin(33), freq=400000) # IO33=485_EN / IO32=CFG
 
-bme = bme280.BME280(i2c=i2c)
+sensor = dht.DHT22(machine.Pin(4))
 
 display = ssd1306.SSD1306_I2C(128, 64, i2c)
 
@@ -22,7 +22,8 @@ while not lan.isconnected():
 
 sleep(3)
 endip = lan.ifconfig()[0]
-dados = bme.values
+sensor.measure()
+dados = [d.temperatura(), d.humidity()]
 temperatura = float(dados[0].replace('C', ''))
 umidade = float(dados[2].replace('%', ''))
 json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
@@ -38,7 +39,8 @@ display.show()
 
 def temp_umidade(request):
     ''' rota principal '''
-    dados = bme.values
+    sensor.measure()
+    dados = [d.temperatura(), d.humidity()]
     temperatura = float(dados[0].replace('C', ''))
     umidade = float(dados[2].replace('%', ''))
     json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
