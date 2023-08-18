@@ -54,7 +54,8 @@ def temp_umidade(request):
     server.send("Content-Type: application/json\n")
     server.send("Connection: close\n\n")      
     server.send(json_str)
-    
+
+
 def mensagem_display(request):
     ''' rota display '''
     # http://IP/mostra?mensagem=Teste
