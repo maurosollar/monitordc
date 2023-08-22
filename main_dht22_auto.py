@@ -22,26 +22,35 @@ while not lan.isconnected():
 
 sleep(3)
 endip = lan.ifconfig()[0]
-sensor.measure()
-temperatura = sensor.temperature()
-umidade = sensor.humidity()
-json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
-temp = "Temp.: " + str(temperatura)
-umid = "Umidade: " + str(umidade)
-display.fill(0)
-display.text('End. IP:', 0, 0, 1)
-display.text(endip, 0, 16, 1)
-display.text(temp, 0, 32, 1)
-display.text(umid, 0, 48, 1) 
-display.show()
+t_media = u_media = []
+ler_sensor()
 
 
 def temp_umidade(request):
     ''' rota principal '''
+    global t_media
+    global u_media
+    temperatura = sum(t_media)/len(t_media)
+    umidade = sum(t_umidade)/len(t_umidade)
+    json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
+    server.send("HTTP/1.0 200 OK\n")
+    server.send("Content-Type: application/json\n")
+    server.send("Connection: close\n\n")      
+    server.send(json_str)
+
+
+def ler_sensor(request)
+    rtc.stop() 
+    global t_media
+    global u_media
     sensor.measure()
     temperatura = sensor.temperature()
     umidade = sensor.humidity()
-    json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
+    if len(t_media) > 5:
+        t_media.pop(0)
+        u_media.pop(0)
+    t_media.append(temperatura)
+    u_media.append(umidade)
     temp = "Temp.: " + str(temperatura)
     umid = "Umidade: " + str(umidade)
     display.fill(0)
@@ -49,22 +58,10 @@ def temp_umidade(request):
     display.text(endip, 0, 16, 1)
     display.text(temp, 0, 32, 1)
     display.text(umid, 0, 48, 1)
-    display.show()
-    server.send("HTTP/1.0 200 OK\n")
-    server.send("Content-Type: application/json\n")
-    server.send("Connection: close\n\n")      
-    server.send(json_str)
-
-def ler_sensor(request)
-    rtc.stop() 
-    global temperatura
-    global umidade
-    sensor.measure()
-    temperatura = sensor.temperature()
-    umidade = sensor.humidity()
+    display.show()  
     rtc.start()
 
-rtc = RTCounter(2, period=600, mode=RTCounter.PERIODIC, callback=ler_sensor)
+rtc = RTCounter(2, period=250, mode=RTCounter.PERIODIC, callback=ler_sensor)
 
 server = MicroPyServer()
 
