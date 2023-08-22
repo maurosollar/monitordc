@@ -1,18 +1,18 @@
-import machine, esp32, network, json, ssd1306, utils, dht
+import network, json, ssd1306, utils, dht, RTCounter
 from machine import Pin, SoftI2C
 from micropyserver import MicroPyServer
 from time import sleep
 
 i2c = SoftI2C(scl=Pin(32), sda=Pin(33), freq=400000) # IO33=485_EN / IO32=CFG
 
-sensor = dht.DHT22(machine.Pin(4))
+sensor = dht.DHT22(Pin(4))
 
 display = ssd1306.SSD1306_I2C(128, 64, i2c)
 
 # Visto no site do MicroPython - Wireless-Tag's WT32-ETH01 v1.4
-lan = network.LAN(mdc=machine.Pin(23), mdio=machine.Pin(18),
+lan = network.LAN(mdc=Pin(23), mdio=Pin(18),
                   phy_type=network.PHY_LAN8720, phy_addr=1,
-                  power=machine.Pin(16))
+                  power=Pin(16))
 
 if not lan.active():
     lan.active(True)
@@ -55,24 +55,21 @@ def temp_umidade(request):
     server.send("Connection: close\n\n")      
     server.send(json_str)
 
+def ler_sensor(request)
+    rtc.stop() 
+    global temperatura
+    global umidade
+    sensor.measure()
+    temperatura = sensor.temperature()
+    umidade = sensor.humidity()
+    rtc.start()
 
-def mensagem_display(request):
-    ''' rota display '''
-    # http://IP/mostra?mensagem=Teste
-    params = utils.get_request_query_params(request)
-    mensagem = params["mensagem"]
-    display.fill(0)
-    display.text('End. IP:', 0, 0, 1)
-    display.text(endip, 0, 16, 1)
-    display.text(mensagem, 0, 34, 1)
-    display.show()
-    server.send("Mensagem enviada para o display: " + mensagem)
+rtc = RTCounter(2, period=600, mode=RTCounter.PERIODIC, callback=ler_sensor)
 
 server = MicroPyServer()
 
 ''' add routes '''
 server.add_route("/", temp_umidade)
-server.add_route("/mostra", mensagem_display)
 
 ''' start server '''
 server.start()
