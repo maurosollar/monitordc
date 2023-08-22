@@ -31,7 +31,7 @@ def temp_umidade(request):
     global t_media
     global u_media
     temperatura = sum(t_media)/len(t_media)
-    umidade = sum(t_umidade)/len(t_umidade)
+    umidade = sum(u_media)/len(u_media)
     json_str = json.dumps({"temperatura": temperatura, "umidade": umidade})
     server.send("HTTP/1.0 200 OK\n")
     server.send("Content-Type: application/json\n")
@@ -51,6 +51,8 @@ def ler_sensor(request)
         u_media.pop(0)
     t_media.append(temperatura)
     u_media.append(umidade)
+    temperatura = sum(t_media)/len(t_media)
+    umidade = sum(u_media)/len(u_media)  
     temp = "Temp.: " + str(temperatura)
     umid = "Umidade: " + str(umidade)
     display.fill(0)
